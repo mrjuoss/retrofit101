@@ -21,6 +21,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class MainActivity extends AppCompatActivity {
 
     private TextView textViewResult;
+    private JsonPlaceHolderApi jsonPlaceHolderApi;
     private final String BASE_URL = "https://jsonplaceholder.typicode.com/";
 
     @Override
@@ -35,30 +36,33 @@ public class MainActivity extends AppCompatActivity {
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
 
-        JsonPlaceHolderApi jsonPlaceHolderApi = retrofit.create(JsonPlaceHolderApi.class);
+        jsonPlaceHolderApi = retrofit.create(JsonPlaceHolderApi.class);
 
-        Call<List<Post>> call = jsonPlaceHolderApi.getPosts();
+        getPost();
+    }
+    private void getPost() {
+        Call<List<Post>> call = jsonPlaceHolderApi.getPosts(new Integer[]{1,2,3}, null, null);
 
         call.enqueue(new Callback<List<Post>>() {
             @Override
             public void onResponse(Call<List<Post>> call, Response<List<Post>> response) {
-               if (!response.isSuccessful())  {
-                   textViewResult.setText("Code : "+response.code());
-                   return;
-               }
+                if (!response.isSuccessful())  {
+                    textViewResult.setText("Code : "+response.code());
+                    return;
+                }
 
 
                 List<Post> posts = response.body();
 
-               for (Post post : posts) {
-                   String content = "";
-                   content += "ID : "+ post.getId() + "\n";
-                   content += "User ID : "+ post.getUserId() + "\n";
-                   content += "Title : "+ post.getTitle() + "\n";
-                   content += "Text : "+post.getText() + "\n\n";
+                for (Post post : posts) {
+                    String content = "";
+                    content += "ID : "+ post.getId() + "\n";
+                    content += "User ID : "+ post.getUserId() + "\n";
+                    content += "Title : "+ post.getTitle() + "\n";
+                    content += "Text : "+post.getText() + "\n\n";
 
-                   textViewResult.append(content);
-               }
+                    textViewResult.append(content);
+                }
             }
 
             @Override
