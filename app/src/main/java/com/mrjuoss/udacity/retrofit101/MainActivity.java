@@ -10,7 +10,9 @@ import android.widget.TextView;
 import com.mrjuoss.udacity.retrofit101.interfaces.JsonPlaceHolderApi;
 import com.mrjuoss.udacity.retrofit101.models.Post;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -41,8 +43,13 @@ public class MainActivity extends AppCompatActivity {
         getPost();
     }
     private void getPost() {
-        Call<List<Post>> call = jsonPlaceHolderApi.getPosts(new Integer[]{1,2,3}, null, null);
+        Map<String, String> params = new HashMap<>();
+        params.put("userId", "4");
+        params.put("_sort", "id");
+        params.put("_order", "desc");
 
+        //Call<List<Post>> call = jsonPlaceHolderApi.getPosts(new Integer[]{1,3,4}, "id", "desc");
+        Call<List<Post>> call = jsonPlaceHolderApi.getPosts(params);
         call.enqueue(new Callback<List<Post>>() {
             @Override
             public void onResponse(Call<List<Post>> call, Response<List<Post>> response) {
